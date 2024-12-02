@@ -1,0 +1,9 @@
+[
+  {
+    "entry": ["src/client/index.ts"],
+    "outDir": "dist/client",
+    "format": ["cjs", "esm"],
+    "dts": true,
+    "sourcemap": true
+  }
+]
