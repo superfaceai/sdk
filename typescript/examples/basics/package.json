@@ -5,7 +5,7 @@
   "author": "Superface Team <hello@superface.ai",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node cli.ts"
+    "start": "ts-node index.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.6",

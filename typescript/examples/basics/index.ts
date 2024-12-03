@@ -1,62 +1,57 @@
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
-import { SuperfaceClient, ToolRun } from 'superface/client';
+import { SuperfaceClient } from 'superface/client';
 
-export async function* runAgent({
-  prompt,
-}: {
-  prompt: string;
-}): AsyncGenerator<
-  { kind: 'tool_run'; toolRun: ToolRun } | { kind: 'content'; content: string }
-> {
-  // Create Superface Toolkit instance
-  const superfaceToolkit = new SuperfaceClient({
-    apiKey: process.env['SUPERFACE_KEY'],
-  });
+require('dotenv').config();
 
-  const openai = new OpenAI({
-    apiKey: process.env['OPENAI_API_KEY'],
-  });
+const openai = new OpenAI();
+const superfaceToolkit = new SuperfaceClient();
 
-  // Install tools at https://pod.superface.ai/hub/settings/tools
+async function main() {
+  const messages: ChatCompletionMessageParam[] = [
+    {
+      role: 'user',
+      // content: 'What tools do you have?',
+      content: 'Look for Superface in ARES',
+    },
+  ];
 
-  const messages: ChatCompletionMessageParam[] = [];
-  messages.push({
-    role: 'user',
-    content: prompt,
-  });
-
-  console.log('messages', messages);
+  console.clear();
+  console.log('💬', messages[0]);
 
   while (true) {
     const chatCompletion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       tools: await superfaceToolkit.getTools(),
       messages,
     });
 
     const message = chatCompletion.choices[0].message;
     messages.push(message);
+    console.log('💬', message);
 
-    if (!message.tool_calls) {
-      yield { kind: 'content', content: message.content ?? '' };
-      return;
-    }
+    if (message.role === 'assistant' && message.tool_calls) {
+      for (const toolCall of message.tool_calls) {
+        console.log('ℹ️', `Running Superface tool '${toolCall.function.name}'`);
 
-    for (const toolCall of message.tool_calls) {
-      const result = await superfaceToolkit.runTool({
-        userId: 'example_user',
-        name: toolCall.function.name,
-        args: JSON.parse(toolCall.function.arguments),
-      });
+        const toolRun = await superfaceToolkit.runTool({
+          userId: 'example_user',
+          name: toolCall.function.name,
+          args: JSON.parse(toolCall.function.arguments),
+        });
 
-      yield { kind: 'tool_run', toolRun: result };
-
-      messages.push({
-        role: 'tool',
-        tool_call_id: toolCall.id,
-        content: JSON.stringify(result),
-      });
+        messages.push({
+          role: 'tool' as const,
+          tool_call_id: toolCall.id,
+          content: JSON.stringify(toolRun),
+        });
+        console.log('💬', messages[messages.length - 1]);
+      }
+    } else {
+      console.log('ℹ️', 'No more tool calls. Exiting.');
+      break;
     }
   }
 }
+
+void main();
