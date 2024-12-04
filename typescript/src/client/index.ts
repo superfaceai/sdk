@@ -39,6 +39,7 @@ export type ToolDefinition = {
 export type SuperfaceToolkitOptions = {
   apiKey?: string;
   applicationReturnLink?: ApplicationReturnLink;
+  cacheTimeout?: number; // ms
 };
 
 export type ApplicationReturnLink = {
@@ -63,12 +64,17 @@ export class SuperfaceClient {
   private hubUrl: string;
   private apiKey: string;
   private returnLink?: ApplicationReturnLink;
+  private cacheTimeout: number;
+  private toolsCache?: { timestamp: number; body: ToolDefinition[] };
 
   constructor(opts: SuperfaceToolkitOptions = {}) {
     this.hubUrl =
       (process.env.SUPERFACE_URL as string) || 'https://pod.superface.ai';
     this.apiKey = opts.apiKey ?? (process.env.SUPERFACE_API_KEY as string);
     this.returnLink = opts.applicationReturnLink;
+    this.cacheTimeout =
+      opts.cacheTimeout ??
+      parseInt(process.env.SUPERFACE_CACHE_TIMEOUT || '60000', 10);
 
     if (!this.apiKey) {
       throw new SuperfaceClientError(`
@@ -80,10 +86,17 @@ export class SuperfaceClient {
    * List installed tool definitions available on the Hub
    *
    * @returns List of tool definitions
-   *
-   * TODO: caching and revalidation
    */
   async getTools(): Promise<ToolDefinition[]> {
+    const now = Date.now();
+
+    if (
+      this.toolsCache &&
+      now - this.toolsCache.timestamp < this.cacheTimeout
+    ) {
+      return this.toolsCache.body;
+    }
+
     let response: Response;
     try {
       response = await fetch(`${this.hubUrl}/api/hub/fd`, {
@@ -108,6 +121,7 @@ export class SuperfaceClient {
       );
     }
 
+    this.toolsCache = { timestamp: now, body };
     return body;
   }
 
