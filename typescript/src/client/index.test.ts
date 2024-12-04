@@ -1,10 +1,9 @@
-import { after } from 'node:test';
-import { SuperfaceClient, SuperfaceClientError } from '.';
+import Superface, { SuperfaceError } from '.';
 
 describe('SuperfaceClient', () => {
   describe('constructor', () => {
     it('throws when apiKey isnt available', () => {
-      expect(() => new SuperfaceClient()).toThrow();
+      expect(() => new Superface()).toThrow();
     });
   });
 
@@ -32,7 +31,7 @@ describe('SuperfaceClient', () => {
     });
 
     it('caches server response', async () => {
-      const client = new SuperfaceClient({ apiKey: 'stub' });
+      const client = new Superface({ apiKey: 'stub' });
 
       await client.getTools();
       await client.getTools();
@@ -42,7 +41,7 @@ describe('SuperfaceClient', () => {
 
     it('re-fetches after cache timeout', async () => {
       jest.useFakeTimers();
-      const client = new SuperfaceClient({ apiKey: 'stub', cacheTimeout: 50 });
+      const client = new Superface({ apiKey: 'stub', cacheTimeout: 50 });
 
       await client.getTools();
       jest.advanceTimersByTime(100);
@@ -56,12 +55,12 @@ describe('SuperfaceClient', () => {
 
 describe('SuperfaceClientError', () => {
   it('extends Error', () => {
-    expect(new SuperfaceClientError('message')).toBeInstanceOf(Error);
+    expect(new SuperfaceError('message')).toBeInstanceOf(Error);
   });
 
   it('sets originalError', () => {
     const error = new Error('original error');
-    const superfaceError = new SuperfaceClientError(
+    const superfaceError = new SuperfaceError(
       'Error described from superface client perspective',
       error
     );

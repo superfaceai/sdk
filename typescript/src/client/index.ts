@@ -36,7 +36,7 @@ export type ToolDefinition = {
   };
 };
 
-export type SuperfaceToolkitOptions = {
+export type SuperfaceOptions = {
   apiKey?: string;
   applicationReturnLink?: ApplicationReturnLink;
   cacheTimeout?: number; // ms
@@ -47,12 +47,12 @@ export type ApplicationReturnLink = {
   appUrl: string;
 };
 
-export class SuperfaceClientError extends Error {
+export class SuperfaceError extends Error {
   originalError?: unknown;
 
   constructor(message: string, error?: unknown) {
     super(message);
-    this.name = 'SuperfaceClientError';
+    this.name = 'SuperfaceError';
     this.originalError = error;
   }
 }
@@ -60,14 +60,14 @@ export class SuperfaceClientError extends Error {
 /**
  * Superface intelligent tools client
  */
-export class SuperfaceClient {
+export class Superface {
   private hubUrl: string;
   private apiKey: string;
   private returnLink?: ApplicationReturnLink;
   private cacheTimeout: number;
   private toolsCache?: { timestamp: number; body: ToolDefinition[] };
 
-  constructor(opts: SuperfaceToolkitOptions = {}) {
+  constructor(opts: SuperfaceOptions = {}) {
     this.hubUrl =
       (process.env.SUPERFACE_URL as string) || 'https://pod.superface.ai';
     this.apiKey = opts.apiKey ?? (process.env.SUPERFACE_API_KEY as string);
@@ -77,7 +77,7 @@ export class SuperfaceClient {
       parseInt(process.env.SUPERFACE_CACHE_TIMEOUT || '60000', 10);
 
     if (!this.apiKey) {
-      throw new SuperfaceClientError(`
+      throw new SuperfaceError(`
         The SUPERFACE_API_KEY environment variable is missing or empty; either provide it, or instantiate the SuperfaceClient with an apiKey option, like new SuperfaceClient({ apiKey: 'My API Key' })`);
     }
   }
@@ -105,20 +105,14 @@ export class SuperfaceClient {
         },
       });
     } catch (err: unknown) {
-      throw new SuperfaceClientError(
-        `Unable to fetch function descriptors`,
-        err
-      );
+      throw new SuperfaceError(`Unable to fetch function descriptors`, err);
     }
 
     let body: ToolDefinition[];
     try {
       body = await response.json(); // TODO assert
     } catch (err: unknown) {
-      throw new SuperfaceClientError(
-        `Unable to parse function descriptors`,
-        err
-      );
+      throw new SuperfaceError(`Unable to parse function descriptors`, err);
     }
 
     this.toolsCache = { timestamp: now, body };
@@ -235,14 +229,16 @@ export class SuperfaceClient {
         headers,
       });
     } catch (err) {
-      throw new SuperfaceClientError(`Unable to fetch configuration link`, err);
+      throw new SuperfaceError(`Unable to fetch configuration link`, err);
     }
 
     try {
       const body: CreateSessionResponse = await response.json();
       return body.configuration_url;
     } catch (err) {
-      throw new SuperfaceClientError(`Unable to fetch configuration link`, err);
+      throw new SuperfaceError(`Unable to fetch configuration link`, err);
     }
   }
 }
+
+export default Superface;

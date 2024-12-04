@@ -1,11 +1,11 @@
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
-import { SuperfaceClient } from 'superface/client';
+import Superface from 'superface/client';
 
 require('dotenv').config();
 
 const openai = new OpenAI();
-const superfaceToolkit = new SuperfaceClient();
+const superfaceToolkit = new Superface();
 
 async function main() {
   const messages: ChatCompletionMessageParam[] = [
