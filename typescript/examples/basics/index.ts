@@ -11,8 +11,7 @@ async function main() {
   const messages: ChatCompletionMessageParam[] = [
     {
       role: 'user',
-      // content: 'What tools do you have?',
-      content: 'Look for Superface in ARES',
+      content: 'What tools do you have?',
     },
   ];
 
