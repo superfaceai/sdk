@@ -5,5 +5,12 @@
     "format": ["cjs", "esm"],
     "dts": true,
     "sourcemap": true
+  },
+  {
+    "entry": ["src/openai/index.ts"],
+    "outDir": "dist/openai",
+    "format": ["cjs", "esm"],
+    "dts": true,
+    "sourcemap": true
   }
 ]

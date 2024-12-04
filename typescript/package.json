@@ -9,6 +9,11 @@
       "types": "./dist/client/index.d.ts",
       "require": "./dist/client/index.js",
       "import": "./dist/client/index.mjs"
+    },
+    "./openai": {
+      "types": "./dist/openai/index.d.ts",
+      "require": "./dist/openai/index.js",
+      "import": "./dist/openai/index.mjs"
     }
   },
   "scripts": {
@@ -28,5 +33,8 @@
   },
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "peerDependencies": {
+    "openai": "^4.75.0"
+  }
 }
