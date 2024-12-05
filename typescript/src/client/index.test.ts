@@ -1,4 +1,4 @@
-import Superface, { SuperfaceError } from '.';
+import Superface, { isUserIdValid, SuperfaceError } from '.';
 
 describe('SuperfaceClient', () => {
   describe('constructor', () => {
@@ -66,5 +66,18 @@ describe('SuperfaceClientError', () => {
     );
 
     expect(superfaceError.originalError).toBe(error);
+  });
+});
+
+describe('isUserIdValid', () => {
+  it('returns true for valid userId', () => {
+    expect(isUserIdValid('validUserId')).toBe(true);
+    expect(isUserIdValid('user_123456789')).toBe(true);
+    expect(isUserIdValid('google-auth|123456789')).toBe(true);
+  });
+
+  it('returns false for invalid userId', () => {
+    expect(isUserIdValid('invalid user id')).toBe(false);
+    expect(isUserIdValid('user@example.com')).toBe(false);
   });
 });

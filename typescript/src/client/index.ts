@@ -57,6 +57,11 @@ export class SuperfaceError extends Error {
   }
 }
 
+const USER_ID_REGEX = /^[a-zA-Z0-9-_|]{1,100}$/;
+export function isUserIdValid(userId: string): boolean {
+  return new RegExp(USER_ID_REGEX).test(userId);
+}
+
 /**
  * Superface intelligent tools client
  */
@@ -136,6 +141,12 @@ export class Superface {
     userId: string;
     args: TArgs;
   }): Promise<ToolRun> {
+    if (!isUserIdValid(userId)) {
+      throw new SuperfaceError(
+        `Invalid user ID: ${userId}. Must match ${USER_ID_REGEX}`
+      );
+    }
+
     const maxRetries = 3;
     let response: Response;
     let lastErrorResult: ToolRun | undefined;
@@ -209,7 +220,11 @@ export class Superface {
    * @returns URL to the configuration page
    */
   async configurationLink({ userId }: { userId: string }): Promise<string> {
-    // TODO validate user id (length, chars)
+    if (!isUserIdValid(userId)) {
+      throw new SuperfaceError(
+        `Invalid user ID: ${userId}. Must match ${USER_ID_REGEX}`
+      );
+    }
 
     let response: Response;
     try {
