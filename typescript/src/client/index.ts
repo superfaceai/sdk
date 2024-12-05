@@ -36,12 +36,21 @@ export type ToolDefinition = {
   };
 };
 
+/**
+ * @param apiKey API key for the Superface
+ * @param applicationReturnLink Optional return link from Connections page to the application
+ * @param cacheTimeout Optional cache timeout in milliseconds (default 60000)
+ */
 export type SuperfaceOptions = {
   apiKey?: string;
   applicationReturnLink?: ApplicationReturnLink;
   cacheTimeout?: number; // ms
 };
 
+/**
+ * @param appName Name of the application (showed on Connections page)
+ * @param appUrl URL of the application where user should be redirected from Connections page
+ */
 export type ApplicationReturnLink = {
   appName: string;
   appUrl: string;
@@ -63,17 +72,29 @@ export function isUserIdValid(userId: string): boolean {
 }
 
 /**
- * Superface intelligent tools client
+ * Superface intelligent tools
+ *
+ * @param opts {SuperfaceOptions} Options for the Superface client
+ *
+ * @example
+ * import Superface from '@superfaceai/client';
+ * const client = new Superface({ apiKey });
+ *
+ * // Get and pass the tools to the LLM Call
+ * const tools = await client.getTools();
+ *
+ * // Once the LLM Call is done, check messages for tool calls and run them
+ * const result = await client.runTool({ userId, name, args });
  */
 export class Superface {
-  private hubUrl: string;
+  private superfaceUrl: string;
   private apiKey: string;
   private returnLink?: ApplicationReturnLink;
   private cacheTimeout: number;
   private toolsCache?: { timestamp: number; body: ToolDefinition[] };
 
   constructor(opts: SuperfaceOptions = {}) {
-    this.hubUrl =
+    this.superfaceUrl =
       (process.env.SUPERFACE_URL as string) || 'https://pod.superface.ai';
     this.apiKey = opts.apiKey ?? (process.env.SUPERFACE_API_KEY as string);
     this.returnLink = opts.applicationReturnLink;
@@ -88,9 +109,14 @@ export class Superface {
   }
 
   /**
-   * List installed tool definitions available on the Hub
+   * List installed tools
    *
-   * @returns List of tool definitions
+   * Tool definitions of installed tools in the Superface.
+   * Contains the name, description, and input parameters of the tool.
+   *
+   * Result is cached. Use cacheTimeout option on Superface to set the cache timeout or set env variable SUPERFACE_CACHE_TIMEOUT. Default is 60000ms.
+   *
+   * @throws {SuperfaceError} If the request fails
    */
   async getTools(): Promise<ToolDefinition[]> {
     const now = Date.now();
@@ -104,7 +130,7 @@ export class Superface {
 
     let response: Response;
     try {
-      response = await fetch(`${this.hubUrl}/api/hub/fd`, {
+      response = await fetch(`${this.superfaceUrl}/api/hub/fd`, {
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
         },
@@ -115,7 +141,7 @@ export class Superface {
 
     let body: ToolDefinition[];
     try {
-      body = await response.json(); // TODO assert
+      body = await response.json();
     } catch (err: unknown) {
       throw new SuperfaceError(`Unable to parse function descriptors`, err);
     }
@@ -125,9 +151,18 @@ export class Superface {
   }
 
   /**
-   * Tool call
+   * Run a tool
    *
-   * @returns Result of the tool call
+   * Runs a tool with the given name and arguments in the Superface.
+   * The tool must be installed in the Superface.
+   *
+   * Request is retried up to 3 times with exponential backoff. Max retries can be set with SUPERFACE_MAX_RETRIES environment variable.
+   *
+   * @param userId User ID
+   * @param name Name of the tool
+   * @param args Arguments for the tool
+   *
+   * @throws {SuperfaceError}
    */
   async runTool<
     TArgs extends Record<string, unknown> = Record<string, unknown>,
@@ -147,7 +182,8 @@ export class Superface {
       );
     }
 
-    const maxRetries = 3;
+    const maxRetries =
+      parseInt(process.env.SUPERFACE_MAX_RETRIES ?? '', 10) || 3;
     let response: Response;
     let lastErrorResult: ToolRun | undefined;
 
@@ -167,7 +203,7 @@ export class Superface {
           headers.append('x-superface-app-url', this.returnLink.appUrl);
         }
 
-        response = await fetch(`${this.hubUrl}/api/hub/perform/${name}`, {
+        response = await fetch(`${this.superfaceUrl}/api/hub/perform/${name}`, {
           method: 'POST',
           body: JSON.stringify(args),
           headers,
@@ -214,10 +250,15 @@ export class Superface {
   }
 
   /**
-   * Get configuration link for the user.
-   * User should be redirected to this link to configure tools.
+   * Create a configuration link
    *
-   * @returns URL to the configuration page
+   * URL to the Superface where the user can manage their connections
+   *
+   * @throws {SuperfaceError}
+   *
+   * @example
+   * const configurationLink = await superface.configurationLink({ userId: 'example_user' });
+   * redirect(configurationLink);
    */
   async configurationLink({ userId }: { userId: string }): Promise<string> {
     if (!isUserIdValid(userId)) {
@@ -239,7 +280,7 @@ export class Superface {
         headers.append('x-superface-app-url', this.returnLink.appUrl);
       }
 
-      response = await fetch(`${this.hubUrl}/api/hub/session`, {
+      response = await fetch(`${this.superfaceUrl}/api/hub/session`, {
         method: 'POST',
         headers,
       });
