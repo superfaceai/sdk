@@ -1,4 +1,4 @@
-[Website](https://superface.ai) | [Documentation](https://docs.superface.ai) | [Twitter](https://twitter.com/superfaceai) | [Support](https://superface.ai/support)
+[Website](https://superface.ai) | [Documentation](https://docs.superface.ai) | [Twitter](https://twitter.com/superfaceai) | [Support](mailto:support@superface.ai)
 
 <img src="https://github.com/superfaceai/sdk/raw/main/docs/LogoGreen.png" alt="Superface" width="100" height="100">
 
@@ -22,25 +22,25 @@ sequenceDiagram
     participant sf as Superface
     participant l as LLM
     u ->>+ a: Interacts with Agent
-    a ->>+ sf: Fetch installed tools and profiles
-    sf ->>- a: Returns tool and profile definitions
-    a ->>+ l: Passes prompt with tool definitions to LLM
-    l ->>- a: Requests specific tool calls
+    a ->>+ sf: Fetch installed tools
+    sf ->>- a: Returns tool definitions
+    a ->>+ l: Passes prompt and tool definitions to LLM
+    l ->>- a: Requests tool calls
     loop Tool Execution
-        a ->>+ sf: Executes tool call
+        a ->>+ sf: Requests tool run
         opt Authentication Required
             sf ->> a: Tool authentication required
             a ->> u: Notify user to authenticate via provided URL
-            u ->> sf: Completes authentication (e.g., OAuth flow, API key setup)
+            u ->> sf: Visits to complete authentication (e.g., OAuth flow, API key setup)
             alt with returnTo
-                sf ->> a: Confirms authentication success (redirecting user to Agent)
+                sf ->> a: Confirms authentication success (by redirecting user to Agent)
             else without returnTo
                 u ->> a: Must notify agent to resume work
             end
         end
         sf ->>- a: Returns tool call result (success or failure)
     end
-    a ->>+ l: Formats tool results and sends to LLM
+    a ->>+ l: Formats tool results and sends it to LLM
     l ->>- a: Provides final response
-    a ->>- u: Displays result to the user
+    a ->>- u: Displays result
 ```
