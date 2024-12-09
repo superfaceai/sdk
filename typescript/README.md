@@ -36,10 +36,10 @@ for (const toolCall of response.toolCalls) {
 }
 ```
 
-Let user manage Connections configuration
+Let users manage tool connections
 ```ts
-const configurationLink = await superface.configurationLink({ userId: 'example_user' });
-redirect(configurationLink.configuration_url);
+const connections = await superface.toolConnections({ userId: 'example_user' });
+redirect(connections.configuration_url);
 ```
 
 ### With OpenAI

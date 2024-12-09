@@ -15,6 +15,8 @@ import {
   ChatCompletionMessageToolCall,
 } from 'openai/src/resources/index.js';
 
+export { SuperfaceError, SuperfaceOptions, isUserIdValid } from '../client';
+
 export class ToolRunResult<T = unknown> {
   constructor(
     private toolCall: ChatCompletionMessageToolCall,
@@ -117,10 +119,10 @@ export class Superface {
     return new ToolRunResult<T>(toolCall, result as ToolRun<T>);
   }
 
-  async configurationLink(
-    ...args: Parameters<SuperfaceClient['configurationLink']>
-  ): ReturnType<SuperfaceClient['configurationLink']> {
-    return await this.client.configurationLink(...args);
+  async toolConnections(
+    ...args: Parameters<SuperfaceClient['toolConnections']>
+  ): ReturnType<SuperfaceClient['toolConnections']> {
+    return await this.client.toolConnections(...args);
   }
 }
 

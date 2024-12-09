@@ -24,7 +24,7 @@ export type ToolRun<TResult = unknown> =
   | ToolRunError
   | ToolRunActionRequired;
 
-export type ConnectionsConfigResponse = {
+export type ToolConnectionsRespnose = {
   status: 'success';
   configuration_url: string;
   assistant_hint: string;
@@ -281,21 +281,21 @@ export class Superface {
   }
 
   /**
-   * Create a configuration link
+   * Manage connections
    *
-   * URL to the Superface where the user can manage their connections
+   * Fetches a configuration link for the user to manage connections in the Superface.
    *
    * @throws {SuperfaceError}
    *
    * @example
-   * const configurationLink = await superface.configurationLink({ userId: 'example_user' });
-   * redirect(configurationLink.configuration_url);
+   * const connections = await superface.toolConnections({ userId: 'example_user' });
+   * redirect(connections.configuration_url);
    */
-  async configurationLink({
+  async toolConnections({
     userId,
   }: {
     userId: string;
-  }): Promise<ConnectionsConfigResponse> {
+  }): Promise<ToolConnectionsRespnose> {
     assertUserId(userId);
 
     const headers = new Headers({
@@ -318,7 +318,7 @@ export class Superface {
           headers,
         });
 
-        const body: ConnectionsConfigResponse = await response.json();
+        const body: ToolConnectionsRespnose = await response.json();
         return body;
       } catch (err) {
         lastError = new SuperfaceError(
