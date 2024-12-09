@@ -1,3 +1,6 @@
+const MAX_CACHE_TIMEOUT = '60000';
+const DEFAULT_MAX_RETRIES = '3';
+
 export type ToolRunAsistantHint = { assistant_hint: string };
 
 export type ToolRunSuccess<TResult> = ToolRunAsistantHint & {
@@ -21,7 +24,7 @@ export type ToolRun<TResult = unknown> =
   | ToolRunError
   | ToolRunActionRequired;
 
-export type CreateSessionResponse = {
+export type ConnectionsConfigResponse = {
   status: 'success';
   configuration_url: string;
   assistant_hint: string;
@@ -32,7 +35,7 @@ export type ToolDefinition = {
   function: {
     name: string;
     description: string;
-    parameters: Record<string, unknown>;
+    parameters: Record<string, unknown>; // JSONSchema
   };
 };
 
@@ -40,11 +43,13 @@ export type ToolDefinition = {
  * @param apiKey API key for the Superface
  * @param applicationReturnLink Optional return link from Connections page to the application
  * @param cacheTimeout Optional cache timeout in milliseconds (default 60000)
+ * @param maxRetries Optional maximum number of retries for requests (default 3)
  */
 export type SuperfaceOptions = {
   apiKey?: string;
   applicationReturnLink?: ApplicationReturnLink;
   cacheTimeout?: number; // ms
+  maxRetries?: number;
 };
 
 /**
@@ -67,8 +72,23 @@ export class SuperfaceError extends Error {
 }
 
 const USER_ID_REGEX = /^[a-zA-Z0-9-_|]{1,100}$/;
+
+/**
+ * @returns Whether the user ID is valid
+ */
 export function isUserIdValid(userId: string): boolean {
   return new RegExp(USER_ID_REGEX).test(userId);
+}
+
+/**
+ * @throws {SuperfaceError} If the user ID is invalid
+ */
+export function assertUserId(userId: string): asserts userId is string {
+  if (!isUserIdValid(userId)) {
+    throw new SuperfaceError(
+      `Invalid user ID: ${userId}. Must match ${USER_ID_REGEX}`
+    );
+  }
 }
 
 /**
@@ -91,6 +111,7 @@ export class Superface {
   private apiKey: string;
   private returnLink?: ApplicationReturnLink;
   private cacheTimeout: number;
+  private maxRetries: number;
   private toolsCache?: { timestamp: number; body: ToolDefinition[] };
 
   constructor(opts: SuperfaceOptions = {}) {
@@ -100,7 +121,10 @@ export class Superface {
     this.returnLink = opts.applicationReturnLink;
     this.cacheTimeout =
       opts.cacheTimeout ??
-      parseInt(process.env.SUPERFACE_CACHE_TIMEOUT || '60000', 10);
+      parseInt(process.env.SUPERFACE_CACHE_TIMEOUT || MAX_CACHE_TIMEOUT, 10);
+    this.maxRetries =
+      opts.maxRetries ??
+      parseInt(process.env.SUPERFACE_MAX_RETRIES || DEFAULT_MAX_RETRIES, 10);
 
     if (!this.apiKey) {
       throw new SuperfaceError(`
@@ -129,25 +153,40 @@ export class Superface {
     }
 
     let response: Response;
-    try {
-      response = await fetch(`${this.superfaceUrl}/api/hub/fd`, {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-        },
-      });
-    } catch (err: unknown) {
-      throw new SuperfaceError(`Unable to fetch function descriptors`, err);
+    let lastError: SuperfaceError | undefined;
+
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+      try {
+        response = await fetch(`${this.superfaceUrl}/api/hub/fd`, {
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+          },
+        });
+      } catch (err: unknown) {
+        lastError = new SuperfaceError(`Unable to fetch tool definitions`, err);
+        await delay(attempt);
+        continue;
+      }
+
+      let body: ToolDefinition[];
+      try {
+        body = await response.json();
+      } catch (err: unknown) {
+        lastError = new SuperfaceError(`Unable to parse tool definitions`, err);
+        await delay(attempt);
+        continue;
+      }
+
+      this.toolsCache = { timestamp: now, body };
+      return body;
     }
 
-    let body: ToolDefinition[];
-    try {
-      body = await response.json();
-    } catch (err: unknown) {
-      throw new SuperfaceError(`Unable to parse function descriptors`, err);
-    }
-
-    this.toolsCache = { timestamp: now, body };
-    return body;
+    throw (
+      lastError ??
+      new SuperfaceError(
+        `Failed to fetch tool definitions. Maximum retries reached.`
+      )
+    );
   }
 
   /**
@@ -176,21 +215,12 @@ export class Superface {
     userId: string;
     args: TArgs;
   }): Promise<ToolRun> {
-    if (!isUserIdValid(userId)) {
-      throw new SuperfaceError(
-        `Invalid user ID: ${userId}. Must match ${USER_ID_REGEX}`
-      );
-    }
+    assertUserId(userId);
 
-    const maxRetries =
-      parseInt(process.env.SUPERFACE_MAX_RETRIES ?? '', 10) || 3;
     let response: Response;
     let lastErrorResult: ToolRun | undefined;
 
-    const delay = (duration: number) =>
-      new Promise((resolve) => setTimeout(resolve, duration));
-
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
       try {
         const headers = new Headers({
           'Content-Type': 'application/json',
@@ -217,33 +247,34 @@ export class Superface {
           } catch (err) {
             return {
               status: 'error',
-              error: 'Failed to parse response from Hub ' + err,
+              error: 'Failed to parse response from Superface ' + err,
               assistant_hint: 'Please try again.',
             };
           }
         } else {
           lastErrorResult = {
             status: 'error',
-            error: `Failed to connect to Hub: Wrong content type ${contentType} received`,
+            error: `Failed to connect to Superface Wrong content type ${contentType} received`,
             assistant_hint: 'Please try again.',
           };
         }
       } catch (err) {
         lastErrorResult = {
           status: 'error',
-          error: `Failed to connect to Hub (attempt ${attempt + 1}): ${err}`,
+          error: `Failed to connect to Superface (attempt ${
+            attempt + 1
+          }): ${err}`,
           assistant_hint: 'Please try again.',
         };
       }
 
-      const waitTime = Math.pow(4, attempt) * 100; // 100ms, 400ms, 1600ms
-      await delay(waitTime);
+      await delay(attempt);
     }
 
     return (
       lastErrorResult ?? {
         status: 'error',
-        error: 'Failed to connect to Hub. Maximum retries reached.',
+        error: 'Failed to connect to Superface. Maximum retries reached.',
         assistant_hint: 'Please try again.',
       }
     );
@@ -258,43 +289,61 @@ export class Superface {
    *
    * @example
    * const configurationLink = await superface.configurationLink({ userId: 'example_user' });
-   * redirect(configurationLink);
+   * redirect(configurationLink.configuration_url);
    */
-  async configurationLink({ userId }: { userId: string }): Promise<string> {
-    if (!isUserIdValid(userId)) {
-      throw new SuperfaceError(
-        `Invalid user ID: ${userId}. Must match ${USER_ID_REGEX}`
-      );
+  async configurationLink({
+    userId,
+  }: {
+    userId: string;
+  }): Promise<ConnectionsConfigResponse> {
+    assertUserId(userId);
+
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.apiKey}`,
+      'x-superface-user-id': userId,
+    });
+
+    if (this.returnLink?.appName && this.returnLink.appUrl) {
+      headers.append('x-superface-app-name', this.returnLink.appName);
+      headers.append('x-superface-app-url', this.returnLink.appUrl);
     }
 
-    let response: Response;
-    try {
-      const headers = new Headers({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
-        'x-superface-user-id': userId,
-      });
+    let lastError: SuperfaceError | undefined;
 
-      if (this.returnLink?.appName && this.returnLink.appUrl) {
-        headers.append('x-superface-app-name', this.returnLink.appName);
-        headers.append('x-superface-app-url', this.returnLink.appUrl);
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+      try {
+        const response = await fetch(`${this.superfaceUrl}/api/hub/session`, {
+          method: 'POST',
+          headers,
+        });
+
+        const body: ConnectionsConfigResponse = await response.json();
+        return body;
+      } catch (err) {
+        lastError = new SuperfaceError(
+          `Unable to fetch configuration link.`,
+          err
+        );
+        await delay(attempt);
       }
-
-      response = await fetch(`${this.superfaceUrl}/api/hub/session`, {
-        method: 'POST',
-        headers,
-      });
-    } catch (err) {
-      throw new SuperfaceError(`Unable to fetch configuration link`, err);
     }
 
-    try {
-      const body: CreateSessionResponse = await response.json();
-      return body.configuration_url;
-    } catch (err) {
-      throw new SuperfaceError(`Unable to fetch configuration link`, err);
-    }
+    throw (
+      lastError ??
+      new SuperfaceError(
+        `Failed to fetch configuration link. Maximum retries reached.`
+      )
+    );
   }
 }
 
 export default Superface;
+
+/**
+ * Exponential backoff delay
+ */
+function delay(attempt: number) {
+  const waitTime = Math.pow(4, attempt) * 100; // 100ms, 400ms, 1600ms
+  return new Promise((resolve) => setTimeout(resolve, waitTime));
+}
