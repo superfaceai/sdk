@@ -1,6 +1,6 @@
 {
   "name": "superface",
-  "version": "1.0.0",
+  "version": "0.1.0-rc.1",
   "description": "Intelligent Tools for Agentic AI",
   "author": "Superface Team <hello@superface.ai>",
   "license": "MIT",
@@ -15,6 +15,9 @@
       "require": "./dist/openai/index.js",
       "import": "./dist/openai/index.mjs"
     }
+  },
+  "engines": {
+    "node": ">=20"
   },
   "scripts": {
     "build": "tsup",
