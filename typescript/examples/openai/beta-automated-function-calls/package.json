@@ -1,0 +1,22 @@
+{
+  "name": "superface-sdk-example-openai-automated-function-calls",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Superface Team <hello@superface.ai",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.6",
+    "openai": "^4.73.1",
+    "superface": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2"
+  },
+  "workspaces": [
+    "../../.."
+  ]
+}

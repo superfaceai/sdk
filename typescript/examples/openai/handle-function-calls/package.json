@@ -1,5 +1,5 @@
 {
-  "name": "superface-sdk-example-openai",
+  "name": "superface-sdk-example-openai-handle-function-calls",
   "version": "1.0.0",
   "description": "",
   "author": "Superface Team <hello@superface.ai",
@@ -17,6 +17,6 @@
     "ts-node": "^10.9.2"
   },
   "workspaces": [
-    "../.."
+    "../../.."
   ]
 }

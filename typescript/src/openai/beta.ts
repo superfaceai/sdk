@@ -1,4 +1,4 @@
-import { ChatCompletionToolRunnerParams } from 'openai/lib/ChatCompletionRunner.mjs';
+import { FunctionParameters } from 'openai/src/resources/shared.js';
 import { Superface } from '.';
 
 export class SuperfaceOpenAIBeta {
@@ -8,29 +8,25 @@ export class SuperfaceOpenAIBeta {
     this.client = superface;
   }
 
-  async getTools({
-    userId,
-  }: {
-    userId: string;
-  }): Promise<ChatCompletionToolRunnerParams<any>['tools']> {
+  async getTools({ userId }: { userId: string }) {
     const tools = await this.client.getTools();
-    const client = this.client;
-
     return tools.map((tool) => ({
-      type: 'function',
+      type: 'function' as const,
       function: {
         name: tool.function.name,
-        parameters: tool.function.parameters,
-        description: tool.function.description,
+        parameters: tool.function.parameters as FunctionParameters,
+        description: tool.function.description as string,
         parse: JSON.parse,
-        async function(args: any) {
-          return await client.runTool({
+        function: async (args: any) => {
+          const result = await this.client.client.runTool({
             userId,
             name: tool.function.name,
             args,
           });
+
+          return JSON.stringify(result);
         },
       },
-    })) as ChatCompletionToolRunnerParams<any>['tools']; // TODO: Figure out whats wrong with the types
+    }));
   }
 }
