@@ -18,7 +18,7 @@ Follow these steps to set up and run the Superface Client:
 
 3. **Install Tools**
 
-    Install the required tools (e.g., Google Calendar) by visiting the [Superface Hub Tools Settings](https://pod.superface.ai/hub/settings/tools).
+    Install the required tools (e.g., Google Calendar) by visiting the [Superface Tools Settings](https://pod.superface.ai/hub/settings/tools).
 
 4. **Run the Agent**
 

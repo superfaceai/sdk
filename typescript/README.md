@@ -10,27 +10,25 @@ npm install superface
 
 ### Superface Client
 
-
 ```ts
 // import client
 import Superface from 'superface/client';
 
 // create instance 
-const superfaceToolkit = new Superface();
+const superface = new Superface();
 
 // get tools definitions
 const tools = await superface.getTools();
 
 // format and pass tools to LLM 
-const chatCompletion = await openai.chat.completions.create({
-  model: 'gpt-4o',
-  tools: await superfaceToolkit.getTools(),
-  messages,
+const response = await callLLM({
+  tools: tools.map(tool => ({ ... })),
+  prompt: '...'
 });
 
 // handle tool calls
-for (const toolCall of message.tool_calls) {
-  const toolRun = await superfaceToolkit.runTool({
+for (const toolCall of response.toolCalls) {
+  const toolRun = await superface.runTool({
     userId: 'example_user',
     name: toolCall.function.name,
     args: JSON.parse(toolCall.function.arguments),
@@ -40,13 +38,43 @@ for (const toolCall of message.tool_calls) {
 
 Let user manage Connections configuration
 ```ts
-const url = await superface.configurationLink({ userId: 'example_user' });
-redirect(url);
+const configurationLink = await superface.configurationLink({ userId: 'example_user' });
+redirect(configurationLink.configuration_url);
 ```
 
-### OpenAI
+### With OpenAI
 
-TBD if it stays
+```ts
+// import SDK
+import Superface from 'superface/openai';
+import OpenAI from 'openai';
+
+// Create instance
+const superface = new Superface();
+const openai = new OpenAI();
+
+const messages: ChatCompletionMessageParam[] = [
+  { role: 'user', content: '...' },
+];
+
+// Call OpenAI with Superface tools
+const chatCompletion = await openai.chat.completions.create({
+  model: 'gpt-4o',
+  tools: await superface.getTools(),
+  messages,
+});
+const message = chatCompletion.choices[0].message;
+messages.push(message);
+
+// handle tool calls
+for (const toolCall of message.tool_calls ?? []) {
+  const toolRunResult = await superface.runTool({
+    userId: 'example_user',
+    toolCall,
+  });
+  messages.push(toolRunResult.toMessage());
+}
+```
 
 ### Examples
 
@@ -58,4 +86,4 @@ For more examples see [typescript/examples](./examples) folder.
 
 `SUPERFACE_CACHE_TIMEOUT` Set in miliseconds to change cache of tools definitions. By default they are valid for 60000ms.
 
-`SUPERFACE_MAX_RETRIES`
+`SUPERFACE_MAX_RETRIES` Max retries to communicate with Superface servers. affects `getTools` and `runTool` functions.
