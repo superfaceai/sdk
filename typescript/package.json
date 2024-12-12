@@ -3,6 +3,10 @@
   "version": "0.1.0-rc.1",
   "description": "Intelligent Tools for Agentic AI",
   "author": "Superface Team <hello@superface.ai>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/superfaceai/sdk"
+  },
   "license": "MIT",
   "exports": {
     "./client": {
@@ -34,10 +38,10 @@
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },
-  "files": [
-    "dist/**/*"
-  ],
   "peerDependencies": {
     "openai": "^4.75.0"
-  }
+  },
+  "files": [
+    "dist/**/*"
+  ]
 }

@@ -1,86 +1,28 @@
-# Superface SDK - TypeScript
+[SDK](../) / **TypeScript**
 
-## Install
+# <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/typescript.png" alt="TypeScript" width="30" height="30" /> Superface SDK
+
+## Installation
 
 ```sh
 npm install superface
 ```
 
-## Use
+## Usage
 
-### Superface Client
+### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI
 
-```ts
-// import client
-import Superface from 'superface/client';
+To use Superface with OpenAI follow steps in [README](./src/openai/).
 
-// create instance 
-const superface = new Superface();
+### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="16" height="16" /> Client
 
-// get tools definitions
-const tools = await superface.getTools();
+To manually handle all interactions with Superface API, we have prepared client.More on how to use it in [README](./src/client/).
 
-// format and pass tools to LLM 
-const response = await callLLM({
-  tools: tools.map(tool => ({ ... })),
-  prompt: '...'
-});
-
-// handle tool calls
-for (const toolCall of response.toolCalls) {
-  const toolRun = await superface.runTool({
-    userId: 'example_user',
-    name: toolCall.function.name,
-    args: JSON.parse(toolCall.function.arguments),
-  });
-}
-```
-
-Let users manage tool connections
-```ts
-const connections = await superface.toolConnections({ userId: 'example_user' });
-redirect(connections.configuration_url);
-```
-
-### With OpenAI
-
-```ts
-// import SDK
-import Superface from 'superface/openai';
-import OpenAI from 'openai';
-
-// Create instance
-const superface = new Superface();
-const openai = new OpenAI();
-
-const messages: ChatCompletionMessageParam[] = [
-  { role: 'user', content: '...' },
-];
-
-// Call OpenAI with Superface tools
-const chatCompletion = await openai.chat.completions.create({
-  model: 'gpt-4o',
-  tools: await superface.getTools(),
-  messages,
-});
-const message = chatCompletion.choices[0].message;
-messages.push(message);
-
-// handle tool calls
-for (const toolCall of message.tool_calls ?? []) {
-  const toolRunResult = await superface.runTool({
-    userId: 'example_user',
-    toolCall,
-  });
-  messages.push(toolRunResult.toMessage());
-}
-```
-
-### Examples
+## Examples
 
 For more examples see [typescript/examples](./examples) folder.
 
-## Environemt variables
+## Environment variables
 
 `SUPERFACE_API_KEY` this value is used to authenticate clients to Superface API
 
