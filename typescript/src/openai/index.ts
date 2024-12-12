@@ -72,8 +72,8 @@ export class Superface {
   public client: SuperfaceClient;
   public beta: SuperfaceOpenAIBeta;
 
-  constructor(opts: SuperfaceOptions & { client?: SuperfaceClient } = {}) {
-    this.client = new SuperfaceClient(opts);
+  constructor(opts: SuperfaceOptions | { client: SuperfaceClient } = {}) {
+    this.client = 'client' in opts ? opts.client : new SuperfaceClient(opts);
     this.beta = new SuperfaceOpenAIBeta(this);
   }
 
