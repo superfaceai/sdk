@@ -18,10 +18,6 @@ To use Superface with OpenAI follow steps in [README](./src/openai/).
 
 To manually handle all interactions with Superface API, we have prepared client.More on how to use it in [README](./src/client/).
 
-## Examples
-
-For more examples see [typescript/examples](./examples) folder.
-
 ## Environment variables
 
 `SUPERFACE_API_KEY` this value is used to authenticate clients to Superface API
@@ -29,3 +25,11 @@ For more examples see [typescript/examples](./examples) folder.
 `SUPERFACE_CACHE_TIMEOUT` Set in miliseconds to change cache of tools definitions. By default they are valid for 60000ms.
 
 `SUPERFACE_MAX_RETRIES` Max retries to communicate with Superface servers. affects `getTools` and `runTool` functions.
+
+## Examples
+
+For more examples see [typescript/examples](./examples) folder.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.

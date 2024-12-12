@@ -6,39 +6,68 @@
 
 # Superface SDK for OpenAI
 
+## Installation
+
+To install the Superface SDK, run the following command:
+
+```sh
+npm install superface
+```
+
+## Usage
+
+### Importing and Creating an Instance
+
 ```ts
-// import SDK
+// import client
 import Superface from 'superface/openai';
+
+// create instance 
+const superface = new Superface();
+```
+
+### Getting Tool Definitions
+
+```ts
+const tools = await superface.getTools();
+```
+
+### Calling Chat Completions with tools
+
+```ts
 import OpenAI from 'openai';
 
-// Create instance
-const superface = new Superface();
 const openai = new OpenAI();
-
-const messages: ChatCompletionMessageParam[] = [
-  { role: 'user', content: '...' },
-];
-
-// Call OpenAI with Superface tools
 const chatCompletion = await openai.chat.completions.create({
   model: 'gpt-4o',
   tools: await superface.getTools(),
-  messages,
+  messages: [
+    { role: 'user', content: '...' },
+  ]
 });
-const message = chatCompletion.choices[0].message;
-messages.push(message);
+```
 
-// handle tool calls
-for (const toolCall of message.tool_calls ?? []) {
+### Handling Tool Calls
+
+```ts
+for (const toolCall of chatCompletion.choices[0].message.tool_calls ?? []) {
   const toolRunResult = await superface.runTool({
     userId: 'example_user',
     toolCall,
   });
-  messages.push(toolRunResult.toMessage());
 }
 ```
 
-## Beta
+See full [example](../../examples/openai/handle-tool-calls/).
+
+### Managing User Connections
+
+```ts
+const link = await superface.linkToUserConnections({ userId: 'example_user' });
+redirect(link.url);
+```
+
+### OpenAI's Beta
 
 Superface SDK offers seamless integration for [OpenAI's automated function calls](https://github.com/openai/openai-node?tab=readme-ov-file#automated-function-calls).
 
@@ -58,3 +87,7 @@ const finalContent = await runner.finalContent();
 console.log();
 console.log('Final content:', finalContent);
 ```
+
+See full [example](../../examples/openai/beta-automated-function-calls/).
+
+For more information, refer to the [Superface Documentation](https://superface.ai/docs).
