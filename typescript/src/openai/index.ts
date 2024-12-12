@@ -119,10 +119,10 @@ export class Superface {
     return new ToolRunResult<T>(toolCall, result as ToolRun<T>);
   }
 
-  async toolConnections(
-    ...args: Parameters<SuperfaceClient['toolConnections']>
-  ): ReturnType<SuperfaceClient['toolConnections']> {
-    return await this.client.toolConnections(...args);
+  async linkToUserConnections(
+    ...args: Parameters<SuperfaceClient['linkToUserConnections']>
+  ): ReturnType<SuperfaceClient['linkToUserConnections']> {
+    return await this.client.linkToUserConnections(...args);
   }
 }
 

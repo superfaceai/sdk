@@ -32,8 +32,8 @@ for (const toolCall of response.toolCalls) {
 }
 ```
 
-Let users manage tool connections
+Get link to connections management
 ```ts
-const connections = await superface.toolConnections({ userId: 'example_user' });
-redirect(connections.configuration_url);
+const link = await superface.linkToUserConnections({ userId: 'example_user' });
+redirect(link.url);
 ```

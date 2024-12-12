@@ -24,9 +24,9 @@ export type ToolRun<TResult = unknown> =
   | ToolRunError
   | ToolRunActionRequired;
 
-export type ToolConnectionsRespnose = {
+export type UserConnectionsLink = {
   status: 'success';
-  configuration_url: string;
+  url: string;
   assistant_hint: string;
 };
 
@@ -281,21 +281,21 @@ export class Superface {
   }
 
   /**
-   * Manage connections
+   * Get link to users connections
    *
    * Fetches a configuration link for the user to manage connections in the Superface.
    *
    * @throws {SuperfaceError}
    *
    * @example
-   * const connections = await superface.toolConnections({ userId: 'example_user' });
-   * redirect(connections.configuration_url);
+   * const link = await superface.linkToUserConnections({ userId: 'example_user' });
+   * redirect(link.url);
    */
-  async toolConnections({
+  async linkToUserConnections({
     userId,
   }: {
     userId: string;
-  }): Promise<ToolConnectionsRespnose> {
+  }): Promise<UserConnectionsLink> {
     assertUserId(userId);
 
     const headers = new Headers({
@@ -318,8 +318,17 @@ export class Superface {
           headers,
         });
 
-        const body: ToolConnectionsRespnose = await response.json();
-        return body;
+        const body = (await response.json()) as {
+          status: 'success';
+          configuration_url: string;
+          assistant_hint: string;
+        };
+
+        return {
+          status: body.status,
+          url: body.configuration_url,
+          assistant_hint: body.assistant_hint,
+        };
       } catch (err) {
         lastError = new SuperfaceError(
           `Unable to fetch configuration link.`,
