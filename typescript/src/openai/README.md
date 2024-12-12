@@ -44,13 +44,13 @@ Superface SDK offers seamless integration for [OpenAI's automated function calls
 
 ```ts
 const openai = new OpenAI();
-const superfaceToolkit = new Superface();
+const superface = new Superface();
 
 const runner = openai.beta.chat.completions
   .runTools({
     model: 'gpt-4o',
     messages: [{ role: 'user', content: 'What tools do you have?' }],
-    tools: await superfaceToolkit.beta.getTools({ userId: 'example_user' }),
+    tools: await superface.beta.getTools({ userId: 'example_user' }),
   })
   .on('message', (message) => console.log(message));
 

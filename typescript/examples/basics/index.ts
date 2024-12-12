@@ -5,7 +5,7 @@ import Superface from 'superface/client';
 require('dotenv').config();
 
 const openai = new OpenAI();
-const superfaceToolkit = new Superface();
+const superface = new Superface();
 
 async function main() {
   const messages: ChatCompletionMessageParam[] = [
@@ -21,7 +21,7 @@ async function main() {
   while (true) {
     const chatCompletion = await openai.chat.completions.create({
       model: 'gpt-4o',
-      tools: await superfaceToolkit.getTools(),
+      tools: await superface.getTools(),
       messages,
     });
 
@@ -33,7 +33,7 @@ async function main() {
       for (const toolCall of message.tool_calls) {
         console.log('ℹ️', `Running Superface tool '${toolCall.function.name}'`);
 
-        const toolRun = await superfaceToolkit.runTool({
+        const toolRun = await superface.runTool({
           userId: 'example_user',
           name: toolCall.function.name,
           args: JSON.parse(toolCall.function.arguments),
