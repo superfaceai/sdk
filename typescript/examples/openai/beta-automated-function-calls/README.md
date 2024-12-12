@@ -1,4 +1,4 @@
-# Superface Client
+# Superface with OpenAI Automated function calls
 
 To run the example, follow these steps:
 

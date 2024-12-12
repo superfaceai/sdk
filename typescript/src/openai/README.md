@@ -40,6 +40,8 @@ for (const toolCall of message.tool_calls ?? []) {
 
 ## Beta
 
+Superface SDK offers seamless integration for [OpenAI's automated function calls](https://github.com/openai/openai-node?tab=readme-ov-file#automated-function-calls).
+
 ```ts
 const openai = new OpenAI();
 const superfaceToolkit = new Superface();
