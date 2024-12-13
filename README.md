@@ -30,4 +30,4 @@ Superface is the connectivity tooling platform for AI agents. Integrate external
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT license. See the [LICENSE](./LICENSE) file for details.
