@@ -28,7 +28,10 @@ To manually handle all interactions with Superface API, we have prepared client.
 
 ## Examples
 
-For more examples see [typescript/examples](./examples) folder.
+See all examples in [typescript/examples](./examples) folder.
+
+- [Simple chat using OpenAI SDK with tool calling](<(./examples/openai/handle-tool-calls/)>)
+- [Using OpenAI's beta tool runner](<(./examples/openai/beta-automated-function-calls/)>)
 
 ## License
 
