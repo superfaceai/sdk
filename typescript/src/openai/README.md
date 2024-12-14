@@ -1,7 +1,3 @@
-<!-- <div style="display: flex; align-items: center;">
-  <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="100" height="100" />
-</div> -->
-
 [Frameworks](../../../) → **OpenAI** → **TypeScript** | Python (soon)
 
 # <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="30" height="30" /> Superface SDK for OpenAI
