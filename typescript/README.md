@@ -18,6 +18,12 @@ npm install superface
 
 ### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
 
+### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/langchain.png" alt="LangChain" width="16" height="16"> LangChain (soon)
+
+### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/vercel_ai.png" alt="Vercel AI SDK" width="16" height="16"> Vercel AI SDK (soon)
+
+### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/llamaindex.png" alt="Llamaindex" width="16" height="16"> Llamaindex (soon)
+
 ## Examples
 
 See all examples in [typescript/examples](./examples) folder.
