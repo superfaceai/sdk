@@ -1,10 +1,6 @@
 [SDK](../../../) / [TypeScript](../../) / **Client**
 
-<div style="display: flex; align-items: center;">
-  <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="100" height="100" />
-</div>
-
-# Superface Client
+# <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="{ }" width="30" height="30" />  Superface Client
 
 Superface Client provides a seamless way to integrate intelligent tools into your applications. It allows you to fetch tool definitions, run tools, and manage user connections.
 
