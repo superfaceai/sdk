@@ -14,7 +14,7 @@ npm install superface
 
 ### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI →](./src/openai/)
 
-### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="16" height="16"> HTTP Client →](./src/openai/)
+### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="16" height="16"> HTTP Client →](./src/client/)
 
 ### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
 
