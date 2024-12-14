@@ -126,8 +126,8 @@ See full [example](../../examples/openai/beta-automated-function-calls/).
 
 ## Examples
 
-- [Simple chat with tool handling](<(../../examples/openai/handle-tool-calls/)>)
-- [Using OpenAI's beta tool runner](<(../../examples/openai/beta-automated-function-calls/)>)
+- [Simple chat with tool handling](../../examples/openai/handle-tool-calls/)
+- [Using OpenAI's beta tool runner](../../examples/openai/beta-automated-function-calls/)
 
 ---
 

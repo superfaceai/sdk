@@ -22,8 +22,8 @@ npm install superface
 
 See all examples in [typescript/examples](./examples) folder.
 
-- [Simple chat using OpenAI SDK with tool calling](<(./examples/openai/handle-tool-calls/)>)
-- [Using OpenAI's beta tool runner](<(./examples/openai/beta-automated-function-calls/)>)
+- [Simple chat using OpenAI SDK with tool calling](./examples/openai/handle-tool-calls/)
+- [Using OpenAI's beta tool runner](./examples/openai/beta-automated-function-calls/)
 
 ## License
 
