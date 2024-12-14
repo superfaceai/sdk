@@ -1,6 +1,6 @@
 [Website](https://superface.ai) | [Documentation](https://docs.superface.ai) | [X (Twitter)](https://twitter.com/superfaceai) | [Support](mailto:support@superface.ai)
 
-<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface2.png" alt="Superface" width="350" />
+<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="60" />
 
 # Superface AI Tooling SDK
 
