@@ -4,9 +4,12 @@
 
 # Superface AI Tooling SDK
 
-### Empowering Agents with Intelligent Tools
+Superface SDK lets you integrate external apps with your AI agent using function calling. 
 
-Superface is the connectivity tooling platform for AI agents. Integrate external apps with intelligent tools, managed OAuth & end-user auth flows.
+Out of box:
+- intelligent tools
+- managed OAuth 
+- complete end-user auth flows.
 
 You can use Superface with your favorite AI frameworks in **[TypeScript](./typescript/)** and **Python (soon)**.
 

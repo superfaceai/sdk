@@ -2,7 +2,12 @@
 
 # <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/typescript.png" alt="TypeScript" width="30" height="30" /> Superface SDK
 
-[Superface](https://superface.ai) lets you integrate external apps with your AI agent using function calling.
+[Superface SDK](https://superface.ai) lets you integrate external apps with your AI agent using function calling. 
+
+Out of box:
+- intelligent tools
+- managed OAuth 
+- complete end-user auth flows.
 
 ## Installation
 

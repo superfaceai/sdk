@@ -2,7 +2,7 @@
 
 # <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="30" height="30" /> Superface SDK for OpenAI
 
-Superface lets you integrate external apps with your OpenAI agent using function calling.
+Superface SDK lets you integrate external apps with your OpenAI agent using function calling.
 
 This SDK is optimized to be used with OpenAI SDK or other OpenAI-compatible LLM SDKs.
 
