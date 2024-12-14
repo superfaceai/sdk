@@ -20,17 +20,15 @@ npm install superface
 ```
 
 ### Usage with AI frameworks
-#### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI →](./src/openai/)
+- [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI →](./src/openai/)
 
-#### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="16" height="16"> HTTP Client →](./src/openai/)
+- [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/superface.png" alt="Superface" width="16" height="16"> HTTP Client →](./src/openai/)
 
-#### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
-
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
 
 ## <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/python.png" alt="Python" width="24" height="24" /> Python
 
 _All SDKs for Python will be available soon._
-
 
 ## Examples
 
