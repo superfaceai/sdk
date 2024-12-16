@@ -52,7 +52,7 @@
     "dist/**/*"
   ],
   "bugs": {
-    "url": "https://github/com/superfaceai/sdk/issues",
+    "url": "https://github.com/superfaceai/sdk/issues",
     "email": "hello@superface.ai"
   }
 }
