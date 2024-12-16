@@ -34,7 +34,9 @@
     "build": "tsup",
     "watch": "tsup --watch",
     "clean": "rm -rf dist",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "cp ../LICENSE .",
+    "postpack": "rm LICENSE"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
