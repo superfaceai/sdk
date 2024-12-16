@@ -8,34 +8,66 @@ export type ToolRunSuccess<TResult> = ToolRunAsistantHint & {
   result: TResult;
 };
 
+/**
+ * Tool run failed
+ *
+ * The tool run ended with an error.
+ */
 export type ToolRunError = ToolRunAsistantHint & {
   status: 'error';
   error: string;
 };
 
+/**
+ * Tool run requires action
+ *
+ * The response requires an action from the user.
+ * For example, the user may need to connect (authenticate) an 3rd party account.
+ */
 export type ToolRunActionRequired = ToolRunAsistantHint & {
   status: 'requires_action';
   action_type: string;
   action_url: string | null;
 };
 
+/**
+ * Tool run response
+ *
+ * Superface responses are either successful, failed, or require action.
+ * The response contains an assistant hint that can help LLM understand the result and what to do next.
+ *
+ */
 export type ToolRun<TResult = unknown> =
   | ToolRunSuccess<TResult>
   | ToolRunError
   | ToolRunActionRequired;
 
+/**
+ * Response with a link to the user's connections
+ */
 export type UserConnectionsLink = {
   status: 'success';
   url: string;
   assistant_hint: string;
 };
 
+/**
+ * Tool definition
+ *
+ * Currenty only function tools are supported.
+ *
+ * @param type Type of the tool (currently only 'function' is supported)
+ * @param function Function tool definition
+ * @param function.name Name of the tool
+ * @param function.description Description of the tool
+ * @param function.parameters Parameters of the tool. Defined as JSON schema.
+ */
 export type ToolDefinition = {
   type: 'function';
   function: {
     name: string;
     description: string;
-    parameters: Record<string, unknown>; // JSONSchema
+    parameters: Record<string, unknown>; // TODO: JSONSchema type
   };
 };
 
@@ -61,6 +93,12 @@ export type ApplicationReturnLink = {
   appUrl: string;
 };
 
+/**
+ * Generic error thrown by the Superface client
+ *
+ * This should make intercepting errors easier.
+ * To access the original error, use the `originalError` property.
+ */
 export class SuperfaceError extends Error {
   originalError?: unknown;
 
@@ -92,19 +130,20 @@ export function assertUserId(userId: string): asserts userId is string {
 }
 
 /**
- * Superface intelligent tools
+ * Superface HTTP Client
  *
- * @param opts {SuperfaceOptions} Options for the Superface client
+ * Low level client for the Superface API.
+ * Consider using framework-specific clients.
  *
  * @example
  * import Superface from '@superfaceai/client';
- * const client = new Superface({ apiKey });
+ * const superface = new Superface({ apiKey });
  *
  * // Get and pass the tools to the LLM Call
- * const tools = await client.getTools();
+ * const tools = await superface.getTools();
  *
  * // Once the LLM Call is done, check messages for tool calls and run them
- * const result = await client.runTool({ userId, name, args });
+ * const result = await superface.runTool({ userId, name, args });
  */
 export class Superface {
   private superfaceUrl: string;
@@ -202,6 +241,31 @@ export class Superface {
    * @param args Arguments for the tool
    *
    * @throws {SuperfaceError}
+   *
+   * @example
+   * const toolRun = await superface.runTool({
+   *   userId: 'example_user',
+   *   name: toolCall.function.name,
+   *   args: JSON.parse(toolCall.function.arguments),
+   * });
+   *
+   * switch (toolRun.status) {
+   *   case 'success': {
+   *     console.log('✅', 'Tool run successful');
+   *     console.log(toolRun.result);
+   *     break;
+   *   }
+   *   case 'error': {
+   *     console.error('❌', 'Tool run failed');
+   *     console.error(toolRun.error);
+   *     break;
+   *   }
+   *   case 'requires_action': {
+   *     console.error('❗', 'Tool run requires action');
+   *     console.error(toolRun.action_type, ' => ', toolRun.action_url);
+   *     break;
+   *   }
+   * }
    */
   async runTool<
     TArgs extends Record<string, unknown> = Record<string, unknown>,

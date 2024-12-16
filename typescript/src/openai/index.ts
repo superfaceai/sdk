@@ -17,6 +17,11 @@ import {
 
 export { SuperfaceError, SuperfaceOptions, isUserIdValid } from '../client';
 
+/**
+ * Result of a tool run.
+ *
+ * Allows to interact with original response or format result to a message.
+ */
 export class ToolRunResult<T = unknown> {
   constructor(
     private toolCall: ChatCompletionMessageToolCall,
@@ -68,6 +73,25 @@ export class ToolRunResult<T = unknown> {
   }
 }
 
+/**
+ * Superface for OpenAI's API.
+ *
+ * To be used with [OpenAI TypeScript and JavaScript API Library](https://github.com/openai/openai-node).
+ *
+ * @example
+ * const superface = new Superface();
+ *
+ * const chatCompletion = await openai.chat.completions.create({
+ *   model: 'gpt-4o',
+ *   tools: await superface.getTools(),
+ *   messages,
+ * });
+ *
+ * const toolRunResults = await superface.handleToolCalls({
+ *   userId: 'example_user',
+ *   message: chatCompletion.choices[0].message,
+ * });
+ */
 export class Superface {
   public client: SuperfaceClient;
   public beta: SuperfaceOpenAIBeta;
@@ -77,10 +101,32 @@ export class Superface {
     this.beta = new SuperfaceOpenAIBeta(this);
   }
 
+  /**
+   * Get tools definitions
+   *
+   * Then pass the tools to the OpenAI API.
+   *
+   * @example
+   * const chatCompletion = await openai.chat.completions.create({
+   *   model: 'gpt-4o',
+   *   tools: await superface.getTools(),
+   *   messages,
+   * });
+   */
   async getTools(): Promise<ChatCompletionTool[]> {
     return await this.client.getTools();
   }
 
+  /**
+   * Handle all tool calls in a chat completion message.
+   *
+   * @example
+   * const toolRunResults = await superface.handleToolCalls({
+   *  userId: 'example_user',
+   *  message: chatCompletion.choices[0].message,
+   * });
+   * const toolMessages = toolRunResults.map((result) => result.toMessage());
+   */
   async handleToolCalls<T = unknown>({
     userId,
     message,
@@ -103,6 +149,18 @@ export class Superface {
     );
   }
 
+  /**
+   * Run tool call.
+   *
+   * Take tool call and run it.
+   * To handle all tool calls in a chat completion message, use `handleToolCalls`.
+   *
+   * @example
+   * const toolRunResult = superface.runTool({
+   *   userId: 'example_user',
+   *   toolCall: chatCompletion.choices[0].message.tool_calls[0],
+   * });
+   */
   async runTool<T = unknown>({
     userId,
     toolCall,
@@ -119,6 +177,17 @@ export class Superface {
     return new ToolRunResult<T>(toolCall, result as ToolRun<T>);
   }
 
+  /**
+   * Get link to users connections
+   *
+   * Fetches a configuration link for the user to manage connections in the Superface.
+   *
+   * @throws {SuperfaceError}
+   *
+   * @example
+   * const link = await superface.linkToUserConnections({ userId: 'example_user' });
+   * redirect(link.url);
+   */
   async linkToUserConnections(
     ...args: Parameters<SuperfaceClient['linkToUserConnections']>
   ): ReturnType<SuperfaceClient['linkToUserConnections']> {
