@@ -1,6 +1,6 @@
 {
   "name": "superface",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "description": "Intelligent Tools for Agentic AI",
   "author": "Superface Team <hello@superface.ai>",
   "repository": {
@@ -8,6 +8,11 @@
     "url": "https://github.com/superfaceai/sdk"
   },
   "license": "MIT",
+  "keywords": [
+    "ai",
+    "agents",
+    "tools"
+  ],
   "exports": {
     "./client": {
       "types": "./dist/client/index.d.ts",
