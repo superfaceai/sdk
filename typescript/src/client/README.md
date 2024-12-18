@@ -3,7 +3,7 @@
 # <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="{ }" width="30" height="30" />  Superface Client
 
 > [!NOTE]  
-> This is a low-level client, you will need to handle mapping of function descriptors & tool calling manually. For framework specific use, please refer to [supported frameworks](../../../).
+> This is a low-level client, you will need to handle mapping of function definitions & tool calling manually. For framework specific use, please refer to [supported frameworks](../../../).
 
 Superface SDK lets you integrate external apps with your AI agent using function calling.
 
