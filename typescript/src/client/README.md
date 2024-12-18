@@ -23,7 +23,7 @@ Obtain your agent's secret key and connect tools you want your agent to have acc
 import Superface from 'superface/client';
 
 const superface = new Superface({
-  apiKey: process.env.SUPERFACE_API_KEY!,
+  apiKey: process.env.SUPERFACE_API_KEY,
 });
 ```
 

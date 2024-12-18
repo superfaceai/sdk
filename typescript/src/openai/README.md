@@ -20,7 +20,7 @@ Obtain your agent's secret key and connect tools you want your agent to have acc
 import Superface from 'superface/openai';
 
 const superface = new Superface({
-  apiKey: process.env.SUPERFACE_API_KEY!,
+  apiKey: process.env.SUPERFACE_API_KEY,
 });
 ```
 
@@ -137,7 +137,7 @@ Creates a new instance of Superface SDK for OpenAI-compatible SDKs.
 import Superface from 'superface/openai';
 
 const superface = new Superface({
-  apiKey: process.env.SUPERFACE_API_KEY!,
+  apiKey: process.env.SUPERFACE_API_KEY,
   cacheTimeout: 60_000,
   maxRetries: 3,
   applicationReturnLink: {
