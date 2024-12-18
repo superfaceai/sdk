@@ -207,6 +207,23 @@ export class Superface {
         continue;
       }
 
+      if (!response.ok) {
+        if (response.status === 401) {
+          const body = (await response.json()) as {
+            title: string;
+            detail: string;
+          };
+
+          throw new SuperfaceError(`${body.title}. ${body.detail}`);
+        }
+
+        lastError = new SuperfaceError(
+          `Failed to fetch tool definitions. HTTP status ${response.status}`
+        );
+        await delay(attempt);
+        continue;
+      }
+
       let body: ToolDefinition[];
       try {
         body = await response.json();
@@ -303,6 +320,23 @@ export class Superface {
           headers,
         });
 
+        if (!response.ok) {
+          if (response.status === 401) {
+            const body = (await response.json()) as {
+              title: string;
+              detail: string;
+            };
+
+            throw new SuperfaceError(`${body.title}. ${body.detail}`);
+          }
+
+          lastErrorResult = {
+            status: 'error',
+            error: `Failed to connect to Superface. HTTP status ${response.status}`,
+            assistant_hint: 'Please try again.',
+          };
+        }
+
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           try {
@@ -381,6 +415,23 @@ export class Superface {
           method: 'POST',
           headers,
         });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            const body = (await response.json()) as {
+              title: string;
+              detail: string;
+            };
+
+            throw new SuperfaceError(`${body.title}. ${body.detail}`);
+          }
+
+          lastError = new SuperfaceError(
+            `Failed to fetch configuration link. HTTP status ${response.status}`
+          );
+          await delay(attempt);
+          continue;
+        }
 
         const body = (await response.json()) as {
           status: 'success';
