@@ -17,9 +17,9 @@ npm install superface
 
 ## Usage with AI frameworks
 
-### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI →](./src/openai/)
+### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI →](https://github.com/superfaceai/sdk/tree/main/typescript/src/openai/)
 
-### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="Superface" width="16" height="16"> HTTP Client →](./src/client/)
+### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="Superface" width="16" height="16"> HTTP Client →](https://github.com/superfaceai/sdk/tree/main/typescript/src/client/)
 
 ### <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
 
@@ -31,11 +31,11 @@ npm install superface
 
 ## Examples
 
-See all examples in [typescript/examples](./examples) folder.
+See all examples in [typescript/examples](https://github.com/superfaceai/sdk/tree/main/typescript/examples) folder.
 
-- [Simple chat using OpenAI SDK with tool calling](./examples/openai/handle-tool-calls/)
-- [Using OpenAI's beta tool runner](./examples/openai/beta-automated-function-calls/)
+- [Simple chat using OpenAI SDK with tool calling](https://github.com/superfaceai/sdk/tree/main/typescript/examples/openai/handle-tool-calls/)
+- [Using OpenAI's beta tool runner](https://github.com/superfaceai/sdk/tree/main/typescript/examples/openai/beta-automated-function-calls/)
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT license. See the [LICENSE](https://github.com/superfaceai/sdk/tree/main/LICENSE) file for details.
