@@ -13,6 +13,8 @@ Out of box:
 
 You can use Superface with your favorite AI frameworks in **[TypeScript](./typescript/)** and **Python (soon)**.
 
+If you want to suggest other uses or missing frameworks, please [let us know](mailto:support@superface.ai?subject=SDK).
+
 
 ## <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/typescript.png" alt="TS" width="24" height="24" /> TypeScript
 
@@ -27,31 +29,33 @@ npm install superface
 
 - [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="Superface" width="16" height="16"> HTTP Client →](./typescript/src/client/)
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
+Planned support for:
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/langchain.png" alt="LangChain" width="16" height="16"> LangChain (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/vercel_ai.png" alt="Vercel AI SDK" width="16" height="16"> Vercel AI SDK (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/langchain.png" alt="LangChain" width="16" height="16"> LangChain
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/llamaindex.png" alt="Llamaindex" width="16" height="16"> Llamaindex (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/vercel_ai.png" alt="Vercel AI SDK" width="16" height="16"> Vercel AI SDK
+
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/llamaindex.png" alt="Llamaindex" width="16" height="16"> Llamaindex
 
 ## <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/python.png" alt="Python" width="24" height="24" /> Python
 
 _All SDKs for Python will be available soon._
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/anthropic.png" alt="Anthropic" width="16" height="16"> Anthropic
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/crewai.png" alt="CrewAI" width="16" height="16"> CrewAI (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/crewai.png" alt="CrewAI" width="16" height="16"> CrewAI
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/langchain.png" alt="LangChain" width="16" height="16"> LangChain (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/langchain.png" alt="LangChain" width="16" height="16"> LangChain
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/autogen.png" alt="Microsoft AutoGen" width="16" height="16"> AutoGen (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/autogen.png" alt="Microsoft AutoGen" width="16" height="16"> AutoGen
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/llamaindex.png" alt="Llamaindex" width="16" height="16"> Llamaindex (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/llamaindex.png" alt="Llamaindex" width="16" height="16"> Llamaindex
 
-- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="Superface" width="16" height="16"> HTTP Client (soon)
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="Superface" width="16" height="16"> HTTP Client
 
 ## Examples
 
