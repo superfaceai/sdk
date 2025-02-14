@@ -11,7 +11,7 @@ Out of box:
 - managed OAuth 
 - complete end-user auth flows.
 
-You can use Superface with your favorite AI frameworks in **[TypeScript](./typescript/)** and **Python (soon)**.
+You can use Superface with your favorite AI frameworks in **[TypeScript](./typescript/)** and **[Python](./python/)**.
 
 If you want to suggest other uses or missing frameworks, please [let us know](mailto:support@superface.ai?subject=SDK).
 
@@ -41,7 +41,16 @@ Planned support for:
 
 ## <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/python.png" alt="Python" width="24" height="24" /> Python
 
-_All SDKs for Python will be available soon._
+### Installation
+
+```sh
+pip install superface
+```
+
+### Usage with AI frameworks
+- [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/agno.png" alt="Agno" width="16" height="16"> Agno (formerly Phidata) →](./python/src/superface/agno/)
+
+Planned support for:
 
 - <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI
 
@@ -60,6 +69,7 @@ _All SDKs for Python will be available soon._
 ## Examples
 
 [TypeScript Examples](./typescript/examples/)
+[Python Examples](./python/examples/)
 
 ## License
 
