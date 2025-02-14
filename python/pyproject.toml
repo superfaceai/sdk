@@ -1,6 +1,6 @@
 [project]
 name = "superface"
-version = "0.1.0"
+version = "0.1.1"
 description = "Intelligent Tools for Agentic AI"
 authors = [{ name = "Superface Team", email = "hello@superface.ai" }]
 readme = "README.md"
@@ -8,7 +8,7 @@ keywords = ["superface", "ai", "agent", "tools", "integrations", "api", "client"
 dependencies = [
     "requests",
     "pydantic>=2.0.0",
-    "crewai[tools]>=0.80.0,<1.0.0",
+    "crewai>=0.80.0",
     "agno>=1.0.0"
 ]
 requires-python = ">=3.9"
