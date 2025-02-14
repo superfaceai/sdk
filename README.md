@@ -49,6 +49,8 @@ _All SDKs for Python will be available soon._
 
 - <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/crewai.png" alt="CrewAI" width="16" height="16"> CrewAI
 
+- <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/agno.png" alt="Agno" width="16" height="16"> Agno (formerly Phidata)
+
 - <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/langchain.png" alt="LangChain" width="16" height="16"> LangChain
 
 - <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/autogen.png" alt="Microsoft AutoGen" width="16" height="16"> AutoGen
