@@ -86,7 +86,7 @@ def json_schema_to_signature(schema: dict) -> t.List[Parameter]:
                 name=param_name,
                 kind=Parameter.POSITIONAL_OR_KEYWORD,
                 default=Parameter.empty if is_required else default_value,
-                annotation=annotation
+                annotation=annotation if is_required else t.Optional[annotation]
             )
 
             if is_required:
