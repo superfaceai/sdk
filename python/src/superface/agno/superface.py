@@ -49,6 +49,21 @@ class Superface:
 
         return agno_tool
 
+    def is_tool_connected(self, user_id: str, tool_name: str) -> dict:
+        """
+        Check if a tool is connected for a user
+        
+        Args:
+            user_id: User ID to check
+            tool_name: Name of the tool to check
+            
+        Returns:
+            Object containing provider ID and connection status
+            
+        Raises:
+            SuperfaceException: If the request fails
+        """
+        return self.client.is_tool_connected(user_id=user_id, tool_name=tool_name)
 
 def json_schema_to_signature(schema: dict) -> t.List[Parameter]:
     required_parameters = []
