@@ -139,6 +139,133 @@ describe('SuperfaceClient', () => {
       ).rejects.toThrow(SuperfaceError);
     });
   });
+
+  describe('isToolConnected', () => {
+    let fetchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            providerId: 'test-provider',
+            connected: true
+          }),
+      } as Response);
+    });
+
+    afterEach(() => {
+      fetchSpy.mockRestore();
+    });
+
+    it('returns connection status for a tool', async () => {
+      const client = new Superface({ apiKey: 'stub' });
+      
+      const result = await client.isToolConnected({ 
+        userId: 'example_user', 
+        toolName: 'test-tool' 
+      });
+      
+      expect(result).toEqual({
+        providerId: 'test-provider',
+        connected: true
+      });
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://pod.superface.ai/api/hub/tools/test-tool',
+        {
+          headers: {
+            'Authorization': 'Bearer stub',
+            'x-superface-user-id': 'example_user'
+          }
+        }
+      );
+    });
+
+    it('handles disconnected tools correctly', async () => {
+      fetchSpy.mockReset().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            providerId: 'test-provider',
+            connected: false
+          }),
+      } as Response);
+
+      const client = new Superface({ apiKey: 'stub' });
+      
+      const result = await client.isToolConnected({ 
+        userId: 'example_user', 
+        toolName: 'test-tool' 
+      });
+      
+      expect(result).toEqual({
+        providerId: 'test-provider',
+        connected: false
+      });
+    });
+
+    it('defaults connected to false if not provided', async () => {
+      fetchSpy.mockReset().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            providerId: 'test-provider'
+            // connected is not provided
+          }),
+      } as Response);
+
+      const client = new Superface({ apiKey: 'stub' });
+      
+      const result = await client.isToolConnected({ 
+        userId: 'example_user', 
+        toolName: 'test-tool' 
+      });
+      
+      expect(result).toEqual({
+        providerId: 'test-provider',
+        connected: false
+      });
+    });
+
+    it('throws when user is not authenticated', async () => {
+      fetchSpy.mockReset().mockResolvedValue({
+        ok: false,
+        status: 401,
+        json: () =>
+          Promise.resolve({
+            title: 'Unauthorized',
+            detail: `Toolhub URL (https://pod.superface.ai) for Function Descriptors is unauthorized`,
+          }),
+      } as Response);
+
+      const client = new Superface({ apiKey: 'stub' });
+
+      expect(
+        client.isToolConnected({ userId: 'example_user', toolName: 'test-tool' })
+      ).rejects.toThrow(SuperfaceError);
+    });
+
+    it('throws when tool is not found', async () => {
+      fetchSpy.mockReset().mockResolvedValue({
+        ok: false,
+        status: 404,
+        json: () =>
+          Promise.resolve({
+            title: 'Not Found',
+            detail: 'Tool not found',
+          }),
+      } as Response);
+
+      const client = new Superface({ apiKey: 'stub' });
+
+      expect(
+        client.isToolConnected({ userId: 'example_user', toolName: 'nonexistent-tool' })
+      ).rejects.toThrow(SuperfaceError);
+    });
+  });
 });
 
 describe('SuperfaceClientError', () => {
