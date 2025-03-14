@@ -206,8 +206,11 @@ export class Superface {
   }: {
     userId: string;
     toolName: string;
-  }): Promise<boolean> {
-    return (await this.client.isToolConnected({ userId, toolName })).connected;
+  }): Promise<{
+    provider: string;
+    connected: boolean;
+  }> {
+    return this.client.isToolConnected({ userId, toolName });
   }
 }
 
