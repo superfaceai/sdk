@@ -149,7 +149,7 @@ describe('SuperfaceClient', () => {
         status: 200,
         json: () =>
           Promise.resolve({
-            providerId: 'test-provider',
+            provider: 'test-provider',
             connected: true
           }),
       } as Response);
@@ -168,7 +168,7 @@ describe('SuperfaceClient', () => {
       });
       
       expect(result).toEqual({
-        providerId: 'test-provider',
+        provider: 'test-provider',
         connected: true
       });
       expect(fetchSpy).toHaveBeenCalledWith(
@@ -188,7 +188,7 @@ describe('SuperfaceClient', () => {
         status: 200,
         json: () =>
           Promise.resolve({
-            providerId: 'test-provider',
+            provider: 'test-provider',
             connected: false
           }),
       } as Response);
@@ -201,7 +201,7 @@ describe('SuperfaceClient', () => {
       });
       
       expect(result).toEqual({
-        providerId: 'test-provider',
+        provider: 'test-provider',  
         connected: false
       });
     });
@@ -212,7 +212,7 @@ describe('SuperfaceClient', () => {
         status: 200,
         json: () =>
           Promise.resolve({
-            providerId: 'test-provider'
+            provider: 'test-provider'
             // connected is not provided
           }),
       } as Response);
@@ -225,7 +225,7 @@ describe('SuperfaceClient', () => {
       });
       
       expect(result).toEqual({
-        providerId: 'test-provider',
+        provider: 'test-provider',
         connected: false
       });
     });

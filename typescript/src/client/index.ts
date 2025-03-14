@@ -474,7 +474,7 @@ export class Superface {
     userId: string;
     toolName: string;
   }): Promise<{
-    providerId: string;
+    provider: string;
     connected: boolean;
   }> {
     assertUserId(userId);
@@ -510,7 +510,7 @@ export class Superface {
 
         const body = await response.json();
         return {
-          providerId: body.providerId,
+          provider: body.provider,
           connected: body.connected ?? false
         };
 

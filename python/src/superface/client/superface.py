@@ -72,7 +72,7 @@ class Superface:
         response = self.api.get(user_id=user_id, path=f"/tools/{tool_name}")
         
         return {
-            "provider_id": response.get("providerId"),
+            "provider": response.get("provider"),
             "connected": response.get("connected", False)
         }
 
