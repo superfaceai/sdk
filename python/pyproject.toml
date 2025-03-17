@@ -1,6 +1,6 @@
 [project]
 name = "superface"
-version = "0.1.2"
+version = "0.1.3"
 description = "Intelligent Tools for Agentic AI"
 authors = [{ name = "Superface Team", email = "hello@superface.ai" }]
 readme = "README.md"
