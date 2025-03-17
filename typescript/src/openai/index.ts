@@ -193,6 +193,25 @@ export class Superface {
   ): ReturnType<SuperfaceClient['linkToUserConnections']> {
     return await this.client.linkToUserConnections(...args);
   }
+
+  /**
+   * Check if a tool is connected for a user
+   *
+   * @example
+   * const isConnected = await superface.isToolConnected({ userId: 'example_user', toolName: 'hubspot__create-association__CreateAssociation' });
+   */
+  async isToolConnected({
+    userId,
+    toolName,
+  }: {
+    userId: string;
+    toolName: string;
+  }): Promise<{
+    provider: string;
+    connected: boolean;
+  }> {
+    return this.client.isToolConnected({ userId, toolName });
+  }
 }
 
 export default Superface;

@@ -55,6 +55,27 @@ class Superface:
         
         return tools
 
+    def is_tool_connected(self, user_id: str, tool_name: str) -> dict:
+        """
+        Check if a tool is connected for a user
+        
+        Args:
+            user_id: User ID to check
+            tool_name: Name of the tool to check
+            
+        Returns:
+            Object containing provider ID and connection status
+            
+        Raises:
+            SuperfaceException: If the request fails
+        """
+        response = self.api.get(user_id=user_id, path=f"/tools/{tool_name}")
+        
+        return {
+            "provider": response.get("provider"),
+            "connected": response.get("connected", False)
+        }
+
 class SuperfaceAPI:
     def __init__(self, *, 
                  api_key: str, 

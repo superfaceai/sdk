@@ -460,6 +460,76 @@ export class Superface {
       )
     );
   }
+
+  /**
+   * Check if a tool is connected for a user
+   * @param userId User ID to check
+   * @param toolName Name of the tool to check
+   * @returns Object containing provider ID and connection status
+   */
+  async isToolConnected({
+    userId,
+    toolName,
+  }: {
+    userId: string;
+    toolName: string;
+  }): Promise<{
+    provider: string;
+    connected: boolean;
+  }> {
+    assertUserId(userId);
+
+    let response: Response;
+    let lastError: SuperfaceError | undefined;
+
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+      try {
+        response = await fetch(`${this.superfaceUrl}/api/hub/tools/${toolName}`, {
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            'x-superface-user-id': userId,
+          },
+        });
+
+        if (!response.ok) {
+          if ([400, 401, 404, 422].includes(response.status)) {
+            const body = (await response.json()) as {
+              title: string;
+              detail: string;
+            };
+
+            throw new SuperfaceError(`${body.title}. ${body.detail}`);
+          }
+
+          lastError = new SuperfaceError(
+            `Failed to check tool connection. HTTP status ${response.status}`
+          );
+          await delay(attempt);
+          continue;
+        }
+
+        const body = await response.json();
+        return {
+          provider: body.provider,
+          connected: body.connected ?? false
+        };
+
+      } catch (err) {
+        lastError = new SuperfaceError(
+          `Unable to check tool connection state`,
+          err
+        );
+        await delay(attempt);
+      }
+    }
+
+    throw (
+      lastError ??
+      new SuperfaceError(
+        `Failed to check tool connection. Maximum retries reached.`
+      )
+    );
+  }
 }
 
 export default Superface;
