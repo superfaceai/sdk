@@ -12,5 +12,12 @@
     "format": ["cjs", "esm"],
     "dts": true,
     "sourcemap": true
+  },
+  {
+    "entry": ["src/google/index.ts"],
+    "outDir": "dist/google",
+    "format": ["cjs", "esm"],
+    "dts": true,
+    "sourcemap": true
   }
 ]
