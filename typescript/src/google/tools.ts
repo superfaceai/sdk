@@ -2,11 +2,10 @@ import { ToolListUnion } from "@google/genai"
 import Superface from "../client"
 import { isAllOf, isAnyOf, isArray, isBoolean, isEnum, isInteger, isNullable, isNumber, isObject, isOneOf, isString } from "./utils";
 
+
 /**
- * Convert Superface tools to Google GenAI tools
- * 
  * Google supports (26.3.2025) only these open API keywords:
- * - type - must be in Upper Case (STRING, NUMBER, BOOLEAN, INTEGER, ARRAY, OBJECT), can be array of types. Array of types not working in our API - BUG
+ * - type - must be in Upper Case (STRING, NUMBER, BOOLEAN, INTEGER, ARRAY, OBJECT), can be array of types. Array of types not working in our API
  * - description - but not title
  * - required
  * - properties - must not be empty
@@ -16,16 +15,18 @@ import { isAllOf, isAnyOf, isArray, isBoolean, isEnum, isInteger, isNullable, is
  * - format - not supported by our API -- our limitation
  * - enum,
  * - anyOf - not supported by our API -- our limitation. Currently mappig our oneOf to anyOf
+ */
+
+/**
+ * Convert Superface tools to Google GenAI tools
  * @param tools Superface tools
  * @returns Google GenAI tools
  */
-
-
 export function convertToGenaiTools(tools: Awaited<ReturnType<Superface["getTools"]>>): ToolListUnion {
-  const gTools: ToolListUnion = []
+  const googleTools: ToolListUnion = []
 
   for (const tool of tools) {
-    gTools.push({
+    googleTools.push({
       functionDeclarations: [
         {
           name: tool.function.name,
@@ -36,7 +37,7 @@ export function convertToGenaiTools(tools: Awaited<ReturnType<Superface["getTool
     })
   }
 
-  return gTools;
+  return googleTools;
 }
 
 function visit(schema?: Record<string, unknown>): Record<string, unknown> {
@@ -54,8 +55,12 @@ function visit(schema?: Record<string, unknown>): Record<string, unknown> {
     }
   } else if (isString(schema) || isNumber(schema) || isBoolean(schema) || isInteger(schema)) {
     return visitPrimitive(schema);
-  } else if (isOneOf(schema) || isAllOf(schema) || isAnyOf(schema)) {
-    return visitUnion(schema);
+  } else if (isOneOf(schema)) {
+    return visitOneOf(schema);
+  } else if (isAllOf(schema)) {
+    return visitAllOf(schema);
+  } else if (isAnyOf(schema)) {
+    return visitAnyOf(schema);
   }
 
   throw new Error(`Unsupported parameter type: ${JSON.stringify(schema)}`);
@@ -131,7 +136,7 @@ function visitEnum(schema: Record<string, unknown>): { type: 'STRING', enum: str
   return { ...resolved, ...getDocumentation(schema) };
 }
 
-function visitUnion(schema: Record<string, unknown>): { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } {
+function visitOneOf(schema: Record<string, unknown>): { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } {
   const resolved: { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } = {
     anyOf: [],
     nullable: isNullable(schema) ? true : undefined
@@ -144,6 +149,31 @@ function visitUnion(schema: Record<string, unknown>): { anyOf: Record<string, un
   return { ...resolved, ...getDocumentation(schema) };
 }
 
+function visitAllOf(schema: Record<string, unknown>): { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } {
+  const resolved: { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } = {
+    anyOf: [],
+    nullable: isNullable(schema) ? true : undefined
+  };
+
+  if (schema.allOf && Array.isArray(schema.allOf)) {
+    resolved.anyOf = schema.allOf.map(visit);
+  }
+
+  return { ...resolved, ...getDocumentation(schema) };
+}
+
+function visitAnyOf(schema: Record<string, unknown>): { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } {
+  const resolved: { anyOf: Record<string, unknown>[], description?: string, nullable?: boolean } = {
+    anyOf: [],
+    nullable: isNullable(schema) ? true : undefined
+  };
+
+  if (schema.anyOf && Array.isArray(schema.anyOf)) {
+    resolved.anyOf = schema.anyOf.map(visit);
+  }
+
+  return { ...resolved, ...getDocumentation(schema) };
+}
 
 function getDocumentation(schema: Record<string, unknown>): { description?: string } {
 

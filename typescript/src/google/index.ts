@@ -1,5 +1,5 @@
 
-import { GenerateContentResponse, FunctionCall, FunctionResponse, ToolListUnion } from '@google/genai';
+import { GenerateContentResponse, FunctionCall, FunctionResponse, ToolListUnion, ContentUnion } from '@google/genai';
 import SuperfaceClient, {
   isUserIdValid,
   SuperfaceError,
@@ -21,7 +21,7 @@ export class ToolRunResult<T = unknown> {
   constructor(
     private toolCall: FunctionCall,
     private toolRun: ToolRun<T>
-  ) {}
+  ) { }
 
   get status(): ToolRun['status'] {
     return this.toolRun.status;
@@ -59,12 +59,34 @@ export class ToolRunResult<T = unknown> {
     return JSON.stringify(this.toolRun);
   }
 
-  toMessage(): FunctionResponse {
+  /**
+   * Convert tool run result to a message.
+   *
+   * @returns {FunctionResponse}
+   */
+  toMessage(): ContentUnion {
+    /** From Google docs:
+     * Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output.
+     * */
+    let response: Record<string, unknown> = {};
+    if (this.toolRun.status === 'success') {
+      response = { output: this.toolRun.result };
+    } else if (this.toolRun.status === 'error') {
+      response = { error: this.toolRun.error };
+    } else {
+      response = this.toolRun
+    }
     return {
-      id: this.toolCall.id,
-      name: this.toolCall.name,
-      response: this.toolRun,
-    };
+      role: 'user',
+      parts: [{
+        functionResponse: {
+          id: this.toolCall.id,
+          name: this.toolCall.name,
+          response,
+        }
+      }
+      ]
+    }
   }
 }
 
