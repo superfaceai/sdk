@@ -1,10 +1,10 @@
 [Frameworks](../../../) → **Google GenAi** → **TypeScript** | Python (soon)
 
-# <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/google.png" alt="Google GenAi" width="30" height="30" /> Superface SDK for Google GenAi
+# <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/google.png" alt="Google Gen AI SDK (Gemini)" width="30" height="30" /> Superface SDK for Google Gemini (Gen AI)
 
-Superface SDK lets you integrate external apps with your Google GenAi agent using function calling.
+Superface SDK lets you integrate external apps with your Google Gemini agent using function calling.
 
-This SDK is optimized to be used with Google GenAi SDK or other Google GenAi-compatible LLM SDKs.
+This SDK is optimized to be used with Google Gen AI SDK or other Google Gen AI-compatible LLM SDKs.
 
 ## Installation
 
@@ -30,7 +30,7 @@ Load connected tools for agent using [`getTools()` method](#gettools).
 const tools = await superface.getTools();
 ```
 
-Or use directly in Google GenAi chat completion call
+Or use directly in Google Gen AI chat completion call
 
 ```ts
 import { GoogleGenAI, ContentUnion } from '@google/genai';
@@ -54,7 +54,7 @@ const chatCompletion = await googleGenAi.models.generateContent({
 
 ## Handling tool calls
 
-When using [function calling](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/function-calling) with raw Google GenAi SDK, you need to handle your tools calls manually:
+When using [function calling](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/function-calling) with raw Google Gen AI SDK, you need to handle your tools calls manually:
 
 1. Iterate through `functionCalls` as returned from LLM in `assistant` message
 2. Pass the tool call object from the LLM into `runTool()` method on Superface SDK
