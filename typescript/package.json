@@ -25,6 +25,11 @@
       "types": "./dist/openai/index.d.ts",
       "require": "./dist/openai/index.js",
       "import": "./dist/openai/index.mjs"
+    },
+    "./google": {
+      "types": "./dist/google/index.d.ts",
+      "require": "./dist/google/index.js",
+      "import": "./dist/google/index.mjs"
     }
   },
   "engines": {
@@ -48,7 +53,8 @@
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "openai": "^4.75.0"
+    "openai": "^4.75.0",
+    "@google/genai": "^0.6.0"
   },
   "files": [
     "dist/**/*"

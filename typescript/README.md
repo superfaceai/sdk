@@ -19,6 +19,8 @@ npm install superface
 
 ### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/openai.png" alt="OpenAI" width="16" height="16"> OpenAI →](https://github.com/superfaceai/sdk/tree/main/typescript/src/openai/)
 
+### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/google.png" alt="Google" width="16" height="16"> Google Gemini →](https://github.com/superfaceai/sdk/tree/main/typescript/src/google/)
+
 ### [<img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/client.png" alt="Superface" width="16" height="16"> HTTP Client →](https://github.com/superfaceai/sdk/tree/main/typescript/src/client/)
 
 We also plan to support other frameworks. [Let us know](mailto:support@superface.ai?subject=SDK) if you want to suggest other options.
