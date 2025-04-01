@@ -1,4 +1,4 @@
-[Frameworks](../../../) → **Google GenAi** → **TypeScript** | Python (soon)
+[Frameworks](../../../) → **Google Gemini** → **TypeScript** | Python (soon)
 
 # <img src="https://github.com/superfaceai/sdk/raw/main/docs/logos/google.png" alt="Google Gen AI SDK (Gemini)" width="30" height="30" /> Superface SDK for Google Gemini (Gen AI)
 
