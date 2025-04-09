@@ -66,6 +66,15 @@ class Superface:
         return self.client.is_tool_connected(user_id=user_id, tool_name=tool_name)
 
 def json_schema_to_signature(schema: dict) -> t.List[Parameter]:
+    type_mapping = {
+        'integer': int,
+        'number': float,
+        'string': str,
+        'boolean': bool,
+        'array': list,
+        'object': dict
+    }
+    
     required_parameters = []
     optional_parameters = []
 
@@ -76,20 +85,11 @@ def json_schema_to_signature(schema: dict) -> t.List[Parameter]:
         for param_name, param_schema in schema_properties.items():
             param_type = param_schema.get('type', 'any')
             
-            if param_type == 'integer':
-                annotation = int
-            elif param_type == 'number':
-                annotation = float
-            elif param_type == 'string':
-                annotation = str
-            elif param_type == 'boolean':
-                annotation = bool
-            elif param_type == 'array':
-                annotation = list
-            elif param_type == 'object':
-                annotation = dict
+            if isinstance(param_type, list):
+                mapped_types = [type_mapping.get(pt, t.Any) for pt in param_type if pt != "null"]
+                annotation = t.Union[tuple(mapped_types)] if mapped_types else t.Any
             else:
-                annotation = t.Any
+                annotation = type_mapping.get(param_type, t.Any)
             
             default_value = param_schema.get("default", None)
 
@@ -110,4 +110,3 @@ def json_schema_to_signature(schema: dict) -> t.List[Parameter]:
                 optional_parameters.append(param)
     
     return required_parameters + optional_parameters
-
